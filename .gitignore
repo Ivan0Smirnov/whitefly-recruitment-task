@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# Env files
+.env
+*.env
+
+# Logs
+*.log
+
+# DB / runtime files
+dump.rdb
+
+# Celery
+celerybeat-schedule
+celerybeat.pid
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+
+# Cache
+.pytest_cache/
+.mypy_cache/
+.coverage
