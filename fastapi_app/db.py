@@ -1,4 +1,6 @@
 import psycopg2
+
+
 def get_connection():
     return psycopg2.connect(
         dbname="recruitment_tasks_whitefly",
@@ -7,6 +9,7 @@ def get_connection():
         host="db",
         port="5432"
     )
+
 
 def run_query(query, params=None):
     connection = get_connection()

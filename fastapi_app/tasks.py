@@ -1,5 +1,4 @@
 from celery_app import celery
-from db import get_connection
 from db import run_query
 
 
