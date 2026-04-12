@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+        - name: flask
+          image: ivan0smirnov/whitefly-flask:latest
+          command: ["uwsgi", "--ini", "uwsgi.ini"]
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DB_HOST
+              value: db
+            - name: REDIS_HOST
+              value: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask
+spec:
+  selector:
+    app: flask
+  ports:
+    - port: 5000
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-worker
+  template:
+    metadata:
+      labels:
+        app: flask-worker
+    spec:
+      containers:
+        - name: flask-worker
+          image: ivan0smirnov/whitefly-flask:latest
+          command: ["celery", "-A", "tasks", "worker", "--loglevel=info"]
+          env:
+            - name: DB_HOST
+              value: db
+            - name: REDIS_HOST
+              value: redis

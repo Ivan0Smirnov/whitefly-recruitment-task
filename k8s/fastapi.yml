@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+        - name: fastapi
+          image: ivan0smirnov/whitefly-fastapi:latest
+          command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DB_HOST
+              value: db
+            - name: REDIS_HOST
+              value: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi
+spec:
+  selector:
+    app: fastapi
+  ports:
+    - port: 8000
+      targetPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-worker
+  template:
+    metadata:
+      labels:
+        app: fastapi-worker
+    spec:
+      containers:
+        - name: fastapi-worker
+          image: ivan0smirnov/whitefly-fastapi:latest
+          command: ["celery", "-A", "tasks", "worker", "--loglevel=info"]
+          env:
+            - name: DB_HOST
+              value: db
+            - name: REDIS_HOST
+              value: redis
