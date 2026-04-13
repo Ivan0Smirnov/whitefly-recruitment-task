@@ -3,16 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Forma synchroniczna</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-    <form method="post">
-        <label for="fname">First name:</label><br>
-        <input type="text" id="fname" name="fname" required><br>
-        <label for="lname">Last name:</label><br>
-        <input type="text" id="lname" name="lname" required><br>
-        <input type="submit" value="Submit sync">
-    </form>
+
 
 <body>
+<form method="post" action="/fastapi/form_sync">
+    <input hidden type="text" id="visitorId" name="fingerprint">
+    <label for="fname">First name:</label><br>
+    <input type="text" id="fname" name="fname" required><br>
+    <label for="lname">Last name:</label><br>
+    <input type="text" id="lname" name="lname" required><br>
+    <input type="text" name="website" style="display:none">
+    <div class="g-recaptcha" data-sitekey="6LfQ6bQsAAAAADUyaKBnK5FJYPPpZNmcy52QZCc_"></div>
+    <input type="submit" value="Submit sync">
+</form>
+<script>
+    const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+        .then(FingerprintJS => FingerprintJS.load())
 
+    fpPromise
+        .then(fp => fp.get())
+        .then(result => {
+            document.getElementById("visitorId").value = result.visitorId
+        })
+</script>
 </body>
 </html>

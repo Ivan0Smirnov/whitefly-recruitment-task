@@ -5,3 +5,4 @@ celery
 redis
 jinja2
 python-multipart
+requests
